@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>Live update of NYC Bus</title>
+    <link rel="stylesheet"
+	  href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css">
+    <script type="text/javascript"
+	    src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <style>
+      #mapid { height: 380px; }
+    </style>
+
+</head>
+<body>
+    <h1>Test Page</h1>
+    <p>The time now is {{time}}. We have {{number}} buses running in NYC</p>
+    <div id="mapid">
+    </div>
+    <script>
+      var mymap = L.map('mapid').setView([40.7138699004, -73.9161590159], 10);
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiZGlnaXRhbHBpZyIsImEiOiJjaW50bXlyMW4xMThrdWtseXVod2l1aXVsIn0.dMszIX_0aFRde31j9xvIuw', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			id: 'mapbox.streets'
+		}).addTo(mymap);
+      //var bus_location = {{points|tojson|safe}};
+      var bus_location = {
+      "type": "FeatureCollection",
+    "features": [
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+      -73.9161590159, 40.7138699004
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": "This is a B-Cycle Station. Come pick up a bike and pay by the hour. What a deal!"
+            },
+            "id": 51
+        },
+        {
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -104.9983545,
+                    39.7502833
+                ]
+            },
+            "type": "Feature",
+            "properties": {
+                "popupContent": "This is a B-Cycle Station. Come pick up a bike and pay by the hour. What a deal!"
+            },
+            "id": 52
+        }]}
+
+      function onEachFeature(feature, layer) {
+      var popupContent = ""
+      if (feature.properties && feature.properties.popupContent) {
+				popupContent += feature.properties.popupContent;
+			}
+
+			layer.bindPopup(popupContent);
+		}
+
+
+      L.geoJson(bus_location, {
+      style: function (feature) {
+				return feature.properties && feature.properties.style;
+			},
+
+      onEachFeature: onEachFeature,
+      pointToLayer: function (feature, latlng) {
+      return L.circleMarker(latlng, {
+					radius: 8,
+					fillColor: "#ff7800",
+					color: "#000",
+					weight: 1,
+					opacity: 1,
+					fillOpacity: 0.8
+				});
+      }
+      }).addTo(mymap);
+
+
+
+    </script>
+
+</body>
+</html>

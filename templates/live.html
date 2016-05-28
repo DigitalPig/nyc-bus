@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>Live update of NYC Bus</title>
+    <link rel="stylesheet"
+	  href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css">
+    <script type="text/javascript"
+	    src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <style>
+      #mapid { height: 380px; }
+    </style>
+
+</head>
+<body>
+    <h1>Live Update of NYC Bus Status</h1>
+    <p>The time now is {{time}}. We have {{number}} buses running in NYC</p>
+    <div id="mapid">
+    </div>
+    <script>
+      var mymap = L.map('mapid').setView([{{x_mean}}, {{y_mean}}], 12);
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=sk.eyJ1IjoiZGlnaXRhbHBpZyIsImEiOiJjaW50bXlyMW4xMThrdWtseXVod2l1aXVsIn0.dMszIX_0aFRde31j9xvIuw', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			id: 'mapbox.streets'
+      }).addTo(mymap);
+      
+      var bus_location = {{points|tojson|safe}};
+      function onEachFeature(feature, layer) {
+			var popupContent = "<p>Bus number is ";
+
+			if (feature.properties && feature.properties.popupContent) {
+				popupContent += feature.properties.popupContent;
+			}
+
+			layer.bindPopup(popupContent);
+		}
+      var geojsonMarkerOptions = {
+      radius: 3,
+      fillColor: "#ff7800",
+      color: "blue",
+      weight: 1,
+      opacity: 0.5,
+      fillOpacity: 0.5
+      };
+	L.geoJson(bus_location, {
+	onEachFeature: onEachFeature,
+pointToLayer: function (feature, latlng) {
+return L.circleMarker(latlng, geojsonMarkerOptions);
+}
+}).addTo(mymap);
+
+    </script>
+
+</body>
+</html>

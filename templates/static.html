@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Analysis of NYC Bus Info based on Historical Data</title>
+        <link rel="stylesheet"
+	  href="https://cdn.pydata.org/bokeh/release/bokeh-0.11.1.min.css"
+	      type="text/css">
+    <script type="text/javascript"
+	    src="https://cdn.pydata.org/bokeh/release/bokeh-0.11.1.min.js"></script>
+    {{script | safe }}
+</head>
+<body>
+<h1>Static analysis of NYC Bus Info</h1>
+<div class = main>
+  <form action="" method="post" name="timepicker">
+    {{form.hidden_tag()}}
+    <p>
+      Start time is: {{form.start(size=40)}}
+      {% for error in form.start.errors %}
+      <span style="color:red;">[{{error}}]</span>
+      {% endfor %}<br>
+      End time is: {{form.end(size=40)}} 
+      {% for error in form.end.errors %}
+      <span style="color:red;">[{{error}}]</span>
+      {% endfor %}<br>
+      Interval is: {{form.interval}}<br>
+    </p>
+    <p><input type="submit" value="Submit"></p>
+
+  <!-- <form id="input_interval" method="post" action="static"> -->
+<!--   <p>Start time <input type="text" name="start" value={{startime_str}}></p> -->
+<!--   <p>End time <input type="text" name="end" value={{endtime_str}}></p> -->
+
+<!--   <p>Please input the interval (in min): <input type="number" name="interval" -->
+<!--   value={{interval}}> -->
+<!--   </p> -->
+  
+<!--   <input type="submit" value="Submit"> -->
+<!-- </form> -->
+</div>
+
+<h1>Graph using {{interval}} min</h1>
+{{div | safe }}
+
+</body>
+</html>
